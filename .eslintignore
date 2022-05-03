@@ -1,0 +1,5 @@
+# Ignore the webpack config
+webpack.config.js
+
+# Ignore the unit test files
+tests/*test.js
