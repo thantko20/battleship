@@ -8,6 +8,11 @@
     "build": "webpack",
     "watch": "webpack --watch"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thantko20/battleship.git"
