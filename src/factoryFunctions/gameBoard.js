@@ -4,7 +4,7 @@
 /* eslint-disable consistent-return */
 import Ship from './ship';
 
-/* Gameboad factory
+/* Gameboard factory
  * @parameter - none
  * includes functions for placing and creating ships,
  * receiving attacks and registering them into hits or misses,
@@ -22,10 +22,8 @@ const Gameboard = () => {
         position.some((coor) => coor.toString() === coordinate.toString()),
       );
 
-  const getShipsCoordinates = () => {
-    const eachShipCoor = ships.map((ship) => ship.coordinates);
-    return eachShipCoor.flat();
-  };
+  const getShipsCoordinates = () =>
+    ships.map((ship) => ship.coordinates).flat();
 
   const registerHit = (coordinate) => {
     const index = findShipIndex(coordinate);
@@ -90,6 +88,46 @@ const Gameboard = () => {
   const getDamagedPositions = () =>
     ships.map((ship) => ship.ship.getHitPositions()).flat();
 
+  // Unoptimized method. I'm too lazy to scaffold this code.
+  const generateRandomCoordinates = (shipLength) => {
+    while (true) {
+      const coordinates = [];
+      const axis = Math.random() >= 0.5 ? 'X' : 'Y';
+
+      const x = Math.floor(Math.random() * 10);
+      const y = Math.floor(Math.random() * 10);
+
+      const randomCoordinate = [x, y];
+
+      for (let i = 0; i < shipLength; i += 1) {
+        let coordinate;
+
+        if (axis === 'X') {
+          coordinate = [randomCoordinate[0], randomCoordinate[1] + i];
+        } else {
+          coordinate = [randomCoordinate[0] + i, randomCoordinate[1]];
+        }
+        coordinates.push(coordinate);
+      }
+
+      if (canPlaceAt(coordinates)) return coordinates;
+    }
+  };
+
+  // Experiment. Unstable, Unoptimized Method. (Also not tested :) )
+  const autoPlaceShips = () => {
+    // Place Patrol Boat
+    placeShip('Patrol Boat', generateRandomCoordinates(2));
+    // Submarine
+    placeShip('Submarine', generateRandomCoordinates(3));
+    // Destroyer
+    placeShip('Destroyer', generateRandomCoordinates(3));
+    // Battleship
+    placeShip('Battleship', generateRandomCoordinates(4));
+    // Carrier
+    placeShip('Carrier', generateRandomCoordinates(5));
+  };
+
   return {
     placeShip,
     getShips,
@@ -97,6 +135,7 @@ const Gameboard = () => {
     getMisses,
     receiveAttack,
     getDamagedPositions,
+    autoPlaceShips,
   };
 };
 
