@@ -76,4 +76,45 @@ describe('Gameboard', () => {
       expect(canPlaceAt).toBe(false);
     });
   });
+
+  describe('receive attack', () => {
+    it('receives an attack and registers it as a miss', () => {
+      const board = Gameboard();
+      board.placeShip('Patrol Boat', [
+        [0, 0],
+        [0, 1],
+      ]);
+      board.receiveAttack([1, 1]);
+      const misses = [[1, 1]];
+      const result = board.getMisses();
+      expect(result).toEqual(misses);
+    });
+
+    it('receives an attack and registers it as a hit to the ship', () => {
+      const board = Gameboard();
+      board.placeShip('Patrol Boat', [
+        [0, 0],
+        [0, 1],
+      ]);
+      board.receiveAttack([0, 1]);
+      const hits = [[0, 1]];
+      const result = board.getDamagedPositions();
+      expect(result).toEqual(hits);
+    });
+
+    it('receives multiple attacks and registers them into miss or hit', () => {
+      const board = Gameboard();
+      board.placeShip('Patrol Boat', [
+        [0, 0],
+        [0, 1],
+      ]);
+
+      board.receiveAttack([0, 0]);
+      board.receiveAttack([2, 1]);
+      const hits = [[0, 0]];
+      const misses = [[2, 1]];
+      expect(board.getDamagedPositions()).toEqual(hits);
+      expect(board.getMisses()).toEqual(misses);
+    });
+  });
 });
