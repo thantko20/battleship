@@ -1,4 +1,4 @@
-const cell = (playerType, coorindate, empty = true) => {
+const Cell = (playerType, coorindate, empty = true) => {
   const container = document.createElement('div');
   container.className = `grid-cell ${playerType}`;
   container.setAttribute('empty', empty);
@@ -7,4 +7,4 @@ const cell = (playerType, coorindate, empty = true) => {
   return container;
 };
 
-export default cell;
+export default Cell;
