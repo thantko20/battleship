@@ -1,20 +1,10 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable operator-linebreak */
 const ComputerPlayer = () => {
   let turn = true;
-  // let lastHitCoordinate = null;
 
-  // const genCoorOnLastHit = (board) => {
-  //   // Choose axis
-  //   const possibleCoors = [
-  //     [lastHitCoordinate[0] + 1, lastHitCoordinate[1]],
-  //     [lastHitCoordinate[0] - 1, lastHitCoordinate[1]],
-  //     [lastHitCoordinate[0], lastHitCoordinate[1] + 1],
-  //     [lastHitCoordinate[0], lastHitCoordinate[1] - 1],
-  //   ];
-
-  //   const random = Math.floor(Math.random() * possibleCoors.length)
-  //   return possibleCoors
-  // };
+  const includes = (coordinates, coordinate) =>
+    coordinates.some((cell) => cell.toString() === coordinate.toString());
 
   const genRandomCoordinate = () => [
     Math.floor(Math.random() * 12),
@@ -32,10 +22,8 @@ const ComputerPlayer = () => {
     let coordinate;
 
     coordinate = genRandomCoordinate();
-    while (
-      board.getDamagedPositions().includes(coordinate) ||
-      board.getMisses().includes(coordinate)
-    ) {
+    const occupiedCells = board.getDamagedPositions().concat(board.getMisses());
+    while (includes(occupiedCells, coordinate)) {
       coordinate = genRandomCoordinate();
     }
 
