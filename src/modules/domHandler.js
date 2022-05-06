@@ -56,6 +56,23 @@ const domHandler = (function () {
     }
   };
 
+  const clearPlayerShips = () => {
+    const cells = playerBoardEl.querySelectorAll(".grid-cell[empty='false'");
+    if (!cells) return;
+    cells.forEach((cell) => cell.setAttribute('empty', true));
+  };
+
+  const renderPlayerShips = () => {
+    const coordinates = Game.getPlayerShipsPositions();
+
+    coordinates.forEach((coordinate) => {
+      const cell = playerBoardEl.querySelector(
+        `.grid-cell[coordinate="${coordinate[0]},${coordinate[1]}"]`,
+      );
+      cell.setAttribute('empty', false);
+    });
+  };
+
   const clearPlaceHoverEffect = () => {
     const effectedCells = playerBoardEl.querySelectorAll('.grid-cell[hover]');
     if (!effectedCells) return;
@@ -77,8 +94,10 @@ const domHandler = (function () {
       }
     });
 
-    randomPlace.addEventListener('click', () => {
-      Game.placeRandom();
+    placeRandomBtn.addEventListener('click', () => {
+      Game.placePlayerRandom();
+      clearPlayerShips();
+      renderPlayerShips();
     });
   };
 
