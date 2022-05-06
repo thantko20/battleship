@@ -12,7 +12,7 @@ import Ship from './ship';
  * @returns - an object
  */
 const Gameboard = () => {
-  const ships = [];
+  let ships = [];
   const misses = [];
 
   const findShipIndex = (coordinate) =>
@@ -52,7 +52,7 @@ const Gameboard = () => {
       const x = coordinate[0];
       const y = coordinate[1];
 
-      if (!(x >= 0 && x <= 9 && y >= 0 && y <= 9)) {
+      if (!(x >= 0 && x <= 11 && y >= 0 && y <= 11)) {
         isWithinRange = false;
       }
     });
@@ -114,6 +114,11 @@ const Gameboard = () => {
     }
   };
 
+  // Reset the board making ships array get rid of its items
+  const reset = () => {
+    ships = [];
+  };
+
   // Experiment. Unstable, Unoptimized Method. (Also not tested :) )
   const autoPlaceShips = () => {
     // Place Patrol Boat
@@ -136,6 +141,8 @@ const Gameboard = () => {
     receiveAttack,
     getDamagedPositions,
     autoPlaceShips,
+    getShipsCoordinates,
+    reset,
   };
 };
 
