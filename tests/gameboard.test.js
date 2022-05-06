@@ -67,9 +67,9 @@ describe('Gameboard', () => {
     it('returns false when one of the given coordinates is not in the board', () => {
       const board = Gameboard();
       const coordinates = [
-        [9, 1],
         [10, 1],
         [11, 1],
+        [12, 1],
       ];
 
       const canPlaceAt = board.canPlaceAt(coordinates);
@@ -115,6 +115,20 @@ describe('Gameboard', () => {
       const misses = [[2, 1]];
       expect(board.getDamagedPositions()).toEqual(hits);
       expect(board.getMisses()).toEqual(misses);
+    });
+  });
+
+  describe('reset', () => {
+    it('resets the board,i.e, making ships array length back to 0', () => {
+      const board = Gameboard();
+      board.autoPlaceShips();
+      const before = board.getShips().length;
+
+      expect(before).toBe(5);
+
+      board.reset();
+      const after = board.getShips().length;
+      expect(after).toBe(0);
     });
   });
 });
