@@ -17,8 +17,8 @@ const ComputerPlayer = () => {
   // };
 
   const genRandomCoordinate = () => [
-    Math.floor(Math.random() * 10),
-    Math.floor(Math.random() * 10),
+    Math.floor(Math.random() * 12),
+    Math.floor(Math.random() * 12),
   ];
   // I can select random coordinate
   // and check if the random coordinate
