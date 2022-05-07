@@ -1,8 +1,6 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable operator-linebreak */
 const ComputerPlayer = () => {
-  let turn = true;
-
   const includes = (coordinates, coordinate) =>
     coordinates.some((cell) => cell.toString() === coordinate.toString());
 
@@ -35,16 +33,8 @@ const ComputerPlayer = () => {
     board.receiveAttack(coordinate);
   };
 
-  const changeTurn = () => {
-    turn = !turn;
-  };
-
-  const isTurn = () => turn;
-
   return {
     attack,
-    changeTurn,
-    isTurn,
   };
 };
 
