@@ -16,6 +16,10 @@ const domHandler = (function () {
   const placeRandomBtn = document.querySelector('.random-place');
   const resetBoardBtn = document.querySelector('.reset-board');
 
+  const changeAxis = () => {
+    axis = axis === 'X' ? 'Y' : 'X';
+  };
+
   const renderPlayerBoard = () => {
     for (let i = 0; i < 12; i++) {
       for (let j = 0; j < 12; j++) {
@@ -50,6 +54,7 @@ const domHandler = (function () {
     return temp;
   };
 
+  // Cool stuff; hovering effect when placing ships
   const placeHoverEffect = (target) => {
     if (Game.allShipsPlaced()) return;
 
@@ -98,9 +103,7 @@ const domHandler = (function () {
   // Binding events to dynamically generated elements
   const bindEvents = () => {
     // Change the axis; X or Y
-    axisBtn.addEventListener('click', () => {
-      axis = axis === 'X' ? 'Y' : 'X';
-    });
+    axisBtn.addEventListener('click', changeAxis);
 
     // Hover effects when placing the ships.
     playerBoardEl.addEventListener('mouseover', (e) => {
@@ -114,7 +117,6 @@ const domHandler = (function () {
     playerBoardEl.addEventListener('click', (e) => {
       if (Game.allShipsPlaced()) return;
       const cell = e.target;
-      if (!cell) return;
 
       if (
         cell.classList.contains('grid-cell') &&
@@ -125,17 +127,7 @@ const domHandler = (function () {
           .split(',')
           .map((ordinate) => parseInt(ordinate, 10));
 
-        const tile = [];
-
-        for (let i = 0; i < ship.length; i++) {
-          if (axis === 'X') {
-            const updatedCoor = [coordinate[0], coordinate[1] + i];
-            tile.push(updatedCoor);
-          } else {
-            const updatedCoor = [coordinate[0] + i, coordinate[1]];
-            tile.push(updatedCoor);
-          }
-        }
+        const tile = generateTile(coordinate);
 
         if (!Game.availablePositions(tile)) return;
 
