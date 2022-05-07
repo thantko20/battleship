@@ -245,6 +245,7 @@ const domHandler = (function () {
     gameStage.textContent = 'Place the Ships';
     renderComputerBoard();
     renderPlayerBoard();
+    toggleBoardPointerEvents(playerBoardEl, 'remove');
     hideComputerDisplay();
     modalOverlay.classList.remove('active');
   };
