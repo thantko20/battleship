@@ -15,6 +15,7 @@ const domHandler = (function () {
   const axisBtn = document.querySelector('.axis');
   const placeRandomBtn = document.querySelector('.random-place');
   const resetBoardBtn = document.querySelector('.reset-board');
+  const startBtn = document.querySelector('.start');
 
   const changeAxis = () => {
     axis = axis === 'X' ? 'Y' : 'X';
@@ -86,6 +87,14 @@ const domHandler = (function () {
     });
   };
 
+  const popUpBtn = (btn) => {
+    btn.classList.remove('btn-hidden');
+  };
+
+  const hideBtn = (btn) => {
+    btn.classList.add('btn-hidden');
+  };
+
   const placeShip = (event) => {
     if (Game.allShipsPlaced()) return;
     const cell = event.target;
@@ -106,6 +115,8 @@ const domHandler = (function () {
       Game.placePlayerShip(tile);
       renderPlayerShips();
       ship = Game.getShipToPlace();
+
+      if (Game.allShipsPlaced()) popUpBtn(startBtn);
     }
   };
 
@@ -144,6 +155,7 @@ const domHandler = (function () {
       Game.placePlayerRandom();
       clearPlayerShips();
       renderPlayerShips();
+      if (Game.allShipsPlaced()) popUpBtn(startBtn);
     });
 
     // Reset the board
@@ -152,6 +164,7 @@ const domHandler = (function () {
       ship = Game.getShipToPlace();
       clearPlayerShips();
       renderPlayerShips();
+      hideBtn(startBtn);
     });
   };
 
