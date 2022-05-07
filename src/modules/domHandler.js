@@ -187,6 +187,23 @@ const domHandler = (function () {
     renderMisses(board, boardType);
   };
 
+  const conveyAttacks = (coordinate) => {
+    Game.playerAttack(coordinate);
+    renderHitsMisses(computerBoardEl, 'computer');
+
+    if (Game.isGameOver('computer')) {
+      gameStage.textContent = 'You won!';
+      return;
+    }
+
+    Game.computerAttack();
+    renderHitsMisses(playerBoardEl, 'player');
+
+    if (Game.isGameOver('player')) {
+      gameStage.textContent = 'You lost!';
+    }
+  };
+
   // Binding events to dynamically generated elements
   const bindEvents = () => {
     // Change the axis; X or Y
@@ -234,10 +251,7 @@ const domHandler = (function () {
           .split(',')
           .map((ordinate) => parseInt(ordinate, 10));
 
-        Game.attackPhase(coordinate);
-        // Render hit and misses from both boards
-        renderHitsMisses(playerBoardEl, 'player');
-        renderHitsMisses(computerBoardEl, 'computer');
+        conveyAttacks(coordinate);
       }
     });
   };
