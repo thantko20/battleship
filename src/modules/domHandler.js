@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable func-names */
 /* eslint-disable no-plusplus */
 /* eslint-disable wrap-iife */
@@ -5,12 +6,15 @@ import Game from './game';
 import Cell from '../component/cell';
 
 const domHandler = (function () {
+  let ship = Game.getShipToPlace();
   // Queries for existing elements
   let axis = 'X';
   const playerBoardEl = document.querySelector('.player-board');
   const computerBoardEl = document.querySelector('.computer-board');
+  const gameStage = document.querySelector('.game-stage-title');
   const axisBtn = document.querySelector('.axis');
   const placeRandomBtn = document.querySelector('.random-place');
+  const resetBoardBtn = document.querySelector('.reset-board');
 
   const renderPlayerBoard = () => {
     for (let i = 0; i < 12; i++) {
@@ -31,7 +35,10 @@ const domHandler = (function () {
   };
 
   const placeHoverEffect = (target) => {
-    const shipLength = Game.getShipToPlace().length;
+    if (!ship) return;
+    const shipType = ship.type;
+    const shipLength = ship.length;
+    gameStage.textContent = `Place Your ${shipType}`;
     const coordinate = target
       .getAttribute('coordinate')
       .split(',')
@@ -83,10 +90,12 @@ const domHandler = (function () {
 
   // Binding events to dynamically generated elements
   const bindEvents = () => {
+    // Change the axis; X or Y
     axisBtn.addEventListener('click', () => {
       axis = axis === 'X' ? 'Y' : 'X';
     });
 
+    // Hover effects when placing the ships.
     playerBoardEl.addEventListener('mouseover', (e) => {
       if (e.target.classList.contains('grid-cell', 'player')) {
         clearPlaceHoverEffect();
@@ -94,8 +103,60 @@ const domHandler = (function () {
       }
     });
 
+    // Place the ship on the board
+    playerBoardEl.addEventListener('click', (e) => {
+      if (Game.allShipsPlaced()) return;
+      const cell = e.target;
+      if (!cell) return;
+
+      if (
+        cell.classList.contains('grid-cell') &&
+        cell.getAttribute('empty') === 'true'
+      ) {
+        const coordinate = cell
+          .getAttribute('coordinate')
+          .split(',')
+          .map((ordinate) => parseInt(ordinate, 10));
+
+        const tile = [];
+
+        for (let i = 0; i < ship.length; i++) {
+          if (axis === 'X') {
+            const updatedCoor = [coordinate[0], coordinate[1] + i];
+            const candidateCell = playerBoardEl.querySelector(
+              `.grid-cell[coordinate="${updatedCoor[0]},${updatedCoor[1]}"]`,
+            );
+
+            if (!candidateCell) return;
+            tile.push(updatedCoor);
+          } else {
+            const updatedCoor = [coordinate[0] + i, coordinate[1]];
+            const candidateCell = playerBoardEl.querySelector(
+              `.grid-cell[coordinate="${updatedCoor[0]},${updatedCoor[1]}"]`,
+            );
+
+            if (!candidateCell) return;
+            tile.push(updatedCoor);
+          }
+        }
+
+        Game.placePlayerShip(tile);
+        renderPlayerShips();
+        ship = Game.getShipToPlace();
+      }
+    });
+
+    // Event for placing the ships on the board randomly
     placeRandomBtn.addEventListener('click', () => {
       Game.placePlayerRandom();
+      clearPlayerShips();
+      renderPlayerShips();
+    });
+
+    // Reset the board
+    resetBoardBtn.addEventListener('click', () => {
+      Game.resetPlayerBoard();
+      ship = Game.getShipToPlace();
       clearPlayerShips();
       renderPlayerShips();
     });
