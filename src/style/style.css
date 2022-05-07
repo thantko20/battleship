@@ -5,6 +5,8 @@
   --btn-hover: #72b0fc;
   --light-blue: #93c5fd;
   --light-gray-bg: #eff6ff;
+  --hit: #b91c1c;
+  --miss: #bfdbfe;
 }
 
 * {
@@ -17,6 +19,7 @@ html {
 }
 
 body {
+  position: relative;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -31,6 +34,19 @@ button {
   padding: 8px 12px;
   font-weight: 600;
   cursor: pointer;
+}
+
+button:active {
+  animation: scaleUp 0.5s;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 button:hover {
@@ -59,7 +75,6 @@ header {
   align-items: center;
   gap: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.128);
-  z-index: 10;
   background-color: white;
 }
 
@@ -120,8 +135,8 @@ a.github > img:hover {
   box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.055);
 }
 
-.player-board {
-  position: relative;
+.player-board.playing {
+  pointer-events: none;
 }
 
 /* Hide the computer arena until the game starts */
@@ -147,8 +162,42 @@ a.github > img:hover {
   background-color: var(--main-colour);
 }
 
-.grid-cell.playing {
-  pointer-events: none;
+.grid-cell.hit {
+  background-color: var(--hit);
+}
+
+.grid-cell.miss {
+  background-color: var(--miss);
+}
+
+.modal-overlay {
+  position: absolute;
+  height: 100%;
+  top: -100%;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.455);
+  z-index: 5;
+  transition: transform 0.2s;
+}
+
+.modal-overlay.active {
+  transform: translateY(100%);
+}
+
+.game-over-modal {
+  border-radius: 4px;
+  padding: 40px;
+  background-color: var(--light-gray-bg);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gameOver-msg {
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 @media only screen and (max-width: 1100px) {
