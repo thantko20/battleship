@@ -14,11 +14,10 @@ const Game = (function () {
   ];
 
   let shipIdToPlace = 0;
-  const playerBoard = Gameboard();
-  const computerBoard = Gameboard();
+  let playerBoard = Gameboard();
+  let computerBoard = Gameboard();
   computerBoard.autoPlaceShips();
 
-  let turn = 'player';
   const player = Player();
   const computerPlayer = ComputerPlayer();
 
@@ -77,6 +76,13 @@ const Game = (function () {
     return computerBoard.allShipsSunk();
   };
 
+  const reload = () => {
+    shipIdToPlace = 0;
+    playerBoard = Gameboard();
+    computerBoard = Gameboard();
+    computerBoard.autoPlaceShips();
+  };
+
   return {
     allShipsPlaced,
     getShipToPlace,
@@ -92,6 +98,7 @@ const Game = (function () {
     playerAttack,
     computerAttack,
     isGameOver,
+    reload,
   };
 })();
 

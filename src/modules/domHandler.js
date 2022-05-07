@@ -18,6 +18,7 @@ const domHandler = (function () {
   const startBtn = document.querySelector('.start');
   const gameOverMsg = document.querySelector('.gameOver-msg');
   const modalOverlay = document.querySelector('.modal-overlay');
+  const playAgainBtn = document.querySelector('.replay');
 
   const changeAxis = () => {
     axis = axis === 'X' ? 'Y' : 'X';
@@ -72,7 +73,6 @@ const domHandler = (function () {
   const placeHoverEffect = (target) => {
     if (Game.allShipsPlaced()) return;
 
-    gameStage.textContent = `Place Your ${ship.type}`;
     const coordinate = target
       .getAttribute('coordinate')
       .split(',')
@@ -144,13 +144,21 @@ const domHandler = (function () {
     }
   };
 
-  const startGame = () => {
-    toggleBoardPointerEvents(playerBoardEl, 'add');
-    clearPlaceHoverEffect();
-    // Pop up the computer board
+  const popComputerDisplay = () => {
     const computerArena = document.querySelector('.computer-arena');
     computerArena.classList.remove('hide-arena');
-    // hide the btns
+  };
+
+  const hideComputerDisplay = () => {
+    const computerArena = document.querySelector('.computer-arena');
+    computerArena.classList.add('hide-arena');
+  };
+
+  const startGame = () => {
+    gameStage.textContent = '';
+    toggleBoardPointerEvents(playerBoardEl, 'add');
+    clearPlaceHoverEffect();
+    popComputerDisplay();
     hideBtns(resetBoardBtn, placeRandomBtn, startBtn, axisBtn);
     // Change the game stage title
   };
@@ -221,6 +229,22 @@ const domHandler = (function () {
     }
   };
 
+  const clearBoard = (board) => {
+    while (board.firstChild) board.firstChild.remove();
+  };
+
+  const replay = () => {
+    Game.reload();
+    clearBoard(playerBoardEl);
+    clearBoard(computerBoardEl);
+    popUpBtns(resetBoardBtn, placeRandomBtn, axisBtn);
+    gameStage.textContent = 'Place the Ships';
+    renderComputerBoard();
+    renderPlayerBoard();
+    hideComputerDisplay();
+    modalOverlay.classList.remove('active');
+  };
+
   // Binding events to dynamically generated elements
   const bindEvents = () => {
     // Change the axis; X or Y
@@ -239,7 +263,6 @@ const domHandler = (function () {
 
     // Event for placing the ships on the board randomly
     placeRandomBtn.addEventListener('click', () => {
-      gameStage.textContent = 'Randomized!';
       Game.placePlayerRandom();
       clearPlayerShips();
       renderPlayerShips();
@@ -260,9 +283,12 @@ const domHandler = (function () {
     startBtn.addEventListener('click', startGame);
 
     computerBoardEl.addEventListener('click', startAttack);
+
+    playAgainBtn.addEventListener('click', replay);
   };
 
   const init = () => {
+    gameStage.textContent = 'Place the Ships';
     renderPlayerBoard();
     renderComputerBoard();
     bindEvents();
