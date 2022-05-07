@@ -34,33 +34,40 @@ const domHandler = (function () {
     }
   };
 
+  const generateTile = (coordinate) => {
+    const temp = [];
+
+    if (axis === 'X') {
+      for (let i = 0; i < ship.length; i++) {
+        temp.push([coordinate[0], coordinate[1] + i]);
+      }
+    } else {
+      for (let i = 0; i < ship.length; i++) {
+        temp.push([coordinate[0] + i, coordinate[1]]);
+      }
+    }
+
+    return temp;
+  };
+
   const placeHoverEffect = (target) => {
-    if (!ship) return;
-    const shipType = ship.type;
-    const shipLength = ship.length;
-    gameStage.textContent = `Place Your ${shipType}`;
+    if (Game.allShipsPlaced()) return;
+
+    gameStage.textContent = `Place Your ${ship.type}`;
     const coordinate = target
       .getAttribute('coordinate')
       .split(',')
       .map((ordinate) => parseInt(ordinate, 10));
 
-    for (let i = 0; i < shipLength; i++) {
-      if (axis === 'X') {
-        const updatedCoor = [coordinate[0], coordinate[1] + i];
-        const candidateCell = playerBoardEl.querySelector(
-          `.grid-cell[coordinate="${updatedCoor[0]},${updatedCoor[1]}"]`,
-        );
+    const tile = generateTile(coordinate);
 
-        if (candidateCell) candidateCell.setAttribute('hover', '');
-      } else {
-        const updatedCoor = [coordinate[0] + i, coordinate[1]];
-        const candidateCell = playerBoardEl.querySelector(
-          `.grid-cell[coordinate="${updatedCoor[0]},${updatedCoor[1]}"]`,
-        );
+    tile.forEach((cell) => {
+      const candidateCell = playerBoardEl.querySelector(
+        `.grid-cell[coordinate="${cell[0]},${cell[1]}"]`,
+      );
 
-        if (candidateCell) candidateCell.setAttribute('hover', '');
-      }
-    }
+      if (candidateCell) candidateCell.setAttribute('hover', '');
+    });
   };
 
   const clearPlayerShips = () => {
@@ -123,22 +130,14 @@ const domHandler = (function () {
         for (let i = 0; i < ship.length; i++) {
           if (axis === 'X') {
             const updatedCoor = [coordinate[0], coordinate[1] + i];
-            const candidateCell = playerBoardEl.querySelector(
-              `.grid-cell[coordinate="${updatedCoor[0]},${updatedCoor[1]}"]`,
-            );
-
-            if (!candidateCell) return;
             tile.push(updatedCoor);
           } else {
             const updatedCoor = [coordinate[0] + i, coordinate[1]];
-            const candidateCell = playerBoardEl.querySelector(
-              `.grid-cell[coordinate="${updatedCoor[0]},${updatedCoor[1]}"]`,
-            );
-
-            if (!candidateCell) return;
             tile.push(updatedCoor);
           }
         }
+
+        if (!Game.availablePositions(tile)) return;
 
         Game.placePlayerShip(tile);
         renderPlayerShips();
