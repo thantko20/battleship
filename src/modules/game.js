@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 import ComputerPlayer from '../factoryFunctions/computerPlayer';
 import Gameboard from '../factoryFunctions/gameBoard';
 import Player from '../factoryFunctions/player';
@@ -12,13 +13,19 @@ const Game = (function () {
     { type: 'Carrier', length: 5 },
   ];
 
-  const shipToPlace = shipTypes[0];
+  let shipIdToPlace = 0;
   const playerBoard = Gameboard();
   const computerBoard = Gameboard();
+  computerBoard.autoPlaceShips();
   const player = Player();
   const computerPlayer = ComputerPlayer();
 
-  const getShipToPlace = () => shipToPlace;
+  const allShipsPlaced = () => shipTypes.length === shipIdToPlace;
+
+  const getShipToPlace = () => {
+    const ship = shipTypes[shipIdToPlace];
+    return ship;
+  };
 
   const getPlayerMisses = () => playerBoard.getMisses();
 
@@ -28,12 +35,40 @@ const Game = (function () {
 
   const getComputerHits = () => computerBoard.getDamagedPositions();
 
+  const resetPlayerBoard = () => {
+    shipIdToPlace = 0;
+    playerBoard.reset();
+  };
+
+  const placePlayerRandom = () => {
+    resetPlayerBoard();
+    playerBoard.autoPlaceShips();
+    shipIdToPlace = shipTypes.length;
+  };
+
+  const placePlayerShip = (coordinate) => {
+    const shipType = shipTypes[shipIdToPlace].type;
+    shipIdToPlace += 1;
+    playerBoard.placeShip(shipType, coordinate);
+  };
+
+  const getPlayerShipsPositions = () => playerBoard.getShipsCoordinates();
+
+  const availablePositions = (coordinates) =>
+    playerBoard.canPlaceAt(coordinates);
+
   return {
+    allShipsPlaced,
     getShipToPlace,
     getPlayerMisses,
     getPlayerHits,
     getComputerMisses,
     getComputerHits,
+    placePlayerRandom,
+    getPlayerShipsPositions,
+    resetPlayerBoard,
+    placePlayerShip,
+    availablePositions,
   };
 })();
 
