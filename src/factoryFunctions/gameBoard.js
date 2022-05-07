@@ -119,6 +119,13 @@ const Gameboard = () => {
     ships = [];
   };
 
+  // Return true if all ships objects return isSunk() === true; otherwise false
+  const allShipsSunk = () => {
+    const shipsObj = ships.map((ship) => ship.ship);
+
+    return shipsObj.every((shipObj) => shipObj.isSunk());
+  };
+
   // Experiment. Unstable, Unoptimized Method. (Also not tested :) )
   const autoPlaceShips = () => {
     // Place Patrol Boat
@@ -143,6 +150,7 @@ const Gameboard = () => {
     autoPlaceShips,
     getShipsCoordinates,
     reset,
+    allShipsSunk,
   };
 };
 
