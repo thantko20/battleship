@@ -142,6 +142,51 @@ const domHandler = (function () {
     }
   };
 
+  const startGame = () => {
+    toggleBoardPointerEvents(playerBoardEl, 'add');
+    clearPlaceHoverEffect();
+    // Pop up the computer board
+    const computerArena = document.querySelector('.computer-arena');
+    computerArena.classList.remove('hide-arena');
+    // hide the btns
+    hideBtns(resetBoardBtn, placeRandomBtn, startBtn, axisBtn);
+    // Change the game stage title
+  };
+
+  const renderHits = (board, boardType) => {
+    const hits =
+      boardType === 'player' ? Game.getPlayerHits() : Game.getComputerHits();
+
+    hits.forEach((hit) => {
+      const cell = board.querySelector(
+        `.grid-cell[coordinate="${hit[0]},${hit[1]}"]`,
+      );
+
+      cell.classList.add('hit');
+    });
+  };
+
+  const renderMisses = (board, boardType) => {
+    const misses =
+      boardType === 'player'
+        ? Game.getPlayerMisses()
+        : Game.getComputerMisses();
+
+    misses.forEach((miss) => {
+      const cell = board.querySelector(
+        `.grid-cell[coordinate="${miss[0]},${miss[1]}"]`,
+      );
+
+      cell.classList.add('miss');
+    });
+  };
+
+  const renderHitsMisses = (board, boardType) => {
+    // DO SOME WONDERS
+    renderHits(board, boardType);
+    renderMisses(board, boardType);
+  };
+
   // Binding events to dynamically generated elements
   const bindEvents = () => {
     // Change the axis; X or Y
@@ -178,15 +223,22 @@ const domHandler = (function () {
       hideBtns(startBtn);
     });
 
-    startBtn.addEventListener('click', () => {
-      toggleBoardPointerEvents(playerBoardEl, 'add');
-      clearPlaceHoverEffect();
-      // Pop up the computer board
-      const computerArena = document.querySelector('.computer-arena');
-      computerArena.classList.remove('hide-arena');
-      // hide the btns
-      hideBtns(resetBoardBtn, placeRandomBtn, startBtn, axisBtn);
-      // Change the game stage title
+    startBtn.addEventListener('click', startGame);
+
+    computerBoardEl.addEventListener('click', (e) => {
+      const cell = e.target;
+
+      if (cell.className === 'grid-cell computer') {
+        const coordinate = cell
+          .getAttribute('coordinate')
+          .split(',')
+          .map((ordinate) => parseInt(ordinate, 10));
+
+        Game.attackPhase(coordinate);
+        // Render hit and misses from both boards
+        renderHitsMisses(playerBoardEl, 'player');
+        renderHitsMisses(computerBoardEl, 'computer');
+      }
     });
   };
 
