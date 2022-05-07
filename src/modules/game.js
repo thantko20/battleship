@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable implicit-arrow-linebreak */
 import ComputerPlayer from '../factoryFunctions/computerPlayer';
 import Gameboard from '../factoryFunctions/gameBoard';
@@ -16,7 +17,7 @@ const Game = (function () {
   let shipIdToPlace = 0;
   let playerBoard = Gameboard();
   let computerBoard = Gameboard();
-  computerBoard.autoPlaceShips();
+  computerBoard.autoPlaceShips(shipTypes);
 
   const player = Player();
   const computerPlayer = ComputerPlayer();
