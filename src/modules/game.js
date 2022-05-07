@@ -81,7 +81,7 @@ const Game = (function () {
     shipIdToPlace = 0;
     playerBoard = Gameboard();
     computerBoard = Gameboard();
-    computerBoard.autoPlaceShips();
+    computerBoard.autoPlaceShips(shipTypes);
   };
 
   return {
