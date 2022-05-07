@@ -18,16 +18,23 @@
         /></a>
       </header>
       <main id="arena">
-        <h2 class="game-stage-title">Place Your Destroyer</h2>
+        <div class="arena-header">
+          <h2 class="game-stage-title"></h2>
+        </div>
         <div class="boards-container">
           <div class="player-arena">
             <h3>Your Board</h3>
             <div class="board-container">
-              <div class="mask"></div>
               <div class="player-board"></div>
             </div>
+            <div class="board-btns">
+              <button class="reset-board">Reset</button>
+              <button class="random-place">Place Random</button>
+              <button class="axis">Change Axis</button>
+              <button class="start btn-hidden">Start</button>
+            </div>
           </div>
-          <div class="computer-arena">
+          <div class="computer-arena hide-arena">
             <h3>Enemy Board</h3>
             <div class="board-container">
               <div class="mask"></div>

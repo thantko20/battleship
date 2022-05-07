@@ -2,6 +2,7 @@
 
 :root {
   --main-colour: #60a5fa;
+  --btn-hover: #72b0fc;
   --light-blue: #93c5fd;
   --light-gray-bg: #eff6ff;
 }
@@ -22,6 +23,20 @@ body {
   background-color: var(--light-gray-bg);
 }
 
+button {
+  border: none;
+  border-radius: 4px;
+  background-color: var(--main-colour);
+  color: rgb(255, 255, 255);
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--btn-hover);
+}
+
 h1,
 h2,
 h3 {
@@ -35,6 +50,7 @@ h3 {
   flex-direction: column;
 }
 
+/* Header */
 header {
   margin-bottom: 48px;
   padding: 18px 28px;
@@ -48,9 +64,10 @@ header {
 }
 
 a.github > img {
-  transition: transform 1s ease-in-out;
+  transition: transform 0.5s ease-in-out;
 }
 
+/* Logo animation */
 a.github > img:hover {
   transform: rotate(360deg);
 }
@@ -59,6 +76,17 @@ a.github > img:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.arena-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.game-stage-title {
+  font-weight: 500;
 }
 
 .boards-container {
@@ -72,14 +100,17 @@ a.github > img:hover {
   gap: 60px;
 }
 
-.mask.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.board-container {
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
+/* Buttons under board */
+.btn-hidden {
+  display: none;
+}
+
+/* Boards */
 .player-board,
 .computer-board {
   width: 500px;
@@ -89,13 +120,35 @@ a.github > img:hover {
   box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.055);
 }
 
-.grid-cell {
-  border: 1px solid #2563eb;
+.player-board {
+  position: relative;
+}
+
+/* Hide the computer arena until the game starts */
+.computer-arena.hide-arena {
+  display: none;
+}
+
+/* Grid cells styling */
+.grid-cell[empty='true'] {
+  border: 1px solid var(--light-blue);
+}
+
+.grid-cell[hover] {
+  background-color: rgb(207, 207, 207);
 }
 
 .grid-cell:hover {
-  background-color: rgb(174, 174, 174);
+  background-color: rgb(207, 207, 207);
   cursor: crosshair;
+}
+
+.grid-cell[empty='false'] {
+  background-color: var(--main-colour);
+}
+
+.grid-cell.playing {
+  pointer-events: none;
 }
 
 @media only screen and (max-width: 1100px) {
