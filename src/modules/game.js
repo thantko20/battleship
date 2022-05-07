@@ -17,6 +17,8 @@ const Game = (function () {
   const playerBoard = Gameboard();
   const computerBoard = Gameboard();
   computerBoard.autoPlaceShips();
+
+  let turn = 'player';
   const player = Player();
   const computerPlayer = ComputerPlayer();
 
@@ -54,8 +56,26 @@ const Game = (function () {
 
   const getPlayerShipsPositions = () => playerBoard.getShipsCoordinates();
 
+  // Decide whether the givens coordinates can
+  // be placed on the board or not
   const availablePositions = (coordinates) =>
     playerBoard.canPlaceAt(coordinates);
+
+  const playerAttack = (coordinate) => {
+    player.attack(coordinate, computerBoard);
+  };
+
+  const computerAttack = () => {
+    computerPlayer.attack(playerBoard);
+  };
+
+  const isGameOver = (boardName) => {
+    if (boardName === 'player') {
+      return playerBoard.allShipsSunk();
+    }
+
+    return computerBoard.allShipsSunk();
+  };
 
   return {
     allShipsPlaced,
@@ -69,6 +89,9 @@ const Game = (function () {
     resetPlayerBoard,
     placePlayerShip,
     availablePositions,
+    playerAttack,
+    computerAttack,
+    isGameOver,
   };
 })();
 

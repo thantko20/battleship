@@ -16,6 +16,8 @@ const domHandler = (function () {
   const placeRandomBtn = document.querySelector('.random-place');
   const resetBoardBtn = document.querySelector('.reset-board');
   const startBtn = document.querySelector('.start');
+  const gameOverMsg = document.querySelector('.gameOver-msg');
+  const modalOverlay = document.querySelector('.modal-overlay');
 
   const changeAxis = () => {
     axis = axis === 'X' ? 'Y' : 'X';
@@ -121,7 +123,7 @@ const domHandler = (function () {
   };
 
   const clearPlayerShips = () => {
-    const cells = playerBoardEl.querySelectorAll(".grid-cell[empty='false'");
+    const cells = playerBoardEl.querySelectorAll(".grid-cell[empty='false']");
     if (!cells) return;
     cells.forEach((cell) => cell.setAttribute('empty', true));
   };
@@ -192,7 +194,8 @@ const domHandler = (function () {
     renderHitsMisses(computerBoardEl, 'computer');
 
     if (Game.isGameOver('computer')) {
-      gameStage.textContent = 'You won!';
+      gameOverMsg.textContent = 'You won!';
+      modalOverlay.classList.add('active');
       return;
     }
 
@@ -200,7 +203,21 @@ const domHandler = (function () {
     renderHitsMisses(playerBoardEl, 'player');
 
     if (Game.isGameOver('player')) {
-      gameStage.textContent = 'You lost!';
+      gameOverMsg.textContent = 'You lost!';
+      modalOverlay.classList.add('active');
+    }
+  };
+
+  const startAttack = (event) => {
+    const cell = event.target;
+
+    if (cell.className === 'grid-cell computer') {
+      const coordinate = cell
+        .getAttribute('coordinate')
+        .split(',')
+        .map((ordinate) => parseInt(ordinate, 10));
+
+      conveyAttacks(coordinate);
     }
   };
 
@@ -242,18 +259,7 @@ const domHandler = (function () {
 
     startBtn.addEventListener('click', startGame);
 
-    computerBoardEl.addEventListener('click', (e) => {
-      const cell = e.target;
-
-      if (cell.className === 'grid-cell computer') {
-        const coordinate = cell
-          .getAttribute('coordinate')
-          .split(',')
-          .map((ordinate) => parseInt(ordinate, 10));
-
-        conveyAttacks(coordinate);
-      }
-    });
+    computerBoardEl.addEventListener('click', startAttack);
   };
 
   const init = () => {
