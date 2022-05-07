@@ -160,7 +160,6 @@ const domHandler = (function () {
     clearPlaceHoverEffect();
     popComputerDisplay();
     hideBtns(resetBoardBtn, placeRandomBtn, startBtn, axisBtn);
-    // Change the game stage title
   };
 
   const renderHits = (board, boardType) => {
@@ -190,13 +189,16 @@ const domHandler = (function () {
       cell.classList.add('miss');
     });
   };
-
+  // rendering hits into red and misses into bluish colour
+  // From given board
   const renderHitsMisses = (board, boardType) => {
-    // DO SOME WONDERS
     renderHits(board, boardType);
     renderMisses(board, boardType);
   };
 
+  // Sends coordinate to Game
+  // render after it.
+  // also check game over logic
   const conveyAttacks = (coordinate) => {
     Game.playerAttack(coordinate);
     renderHitsMisses(computerBoardEl, 'computer');
@@ -233,6 +235,8 @@ const domHandler = (function () {
     while (board.firstChild) board.firstChild.remove();
   };
 
+  // Go back to initial state
+  // Literally hardcode it to go back to initial state
   const replay = () => {
     Game.reload();
     clearBoard(playerBoardEl);
