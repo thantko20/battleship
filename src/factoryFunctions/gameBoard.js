@@ -88,6 +88,7 @@ const Gameboard = () => {
   const getDamagedPositions = () =>
     ships.map((ship) => ship.ship.getHitPositions()).flat();
 
+  // Cool Function. Might improve when I'm free
   const generateRandomCoordinates = (shipLength) => {
     // eslint-disable-next-line no-constant-condition
     while (true) {
@@ -126,22 +127,13 @@ const Gameboard = () => {
     return shipsObj.every((shipObj) => shipObj.isSunk());
   };
 
-  // Experiment. Unstable, Unoptimized Method. (Also not tested :) )
+  // Auto place ship; Hight level function
+  // relies on generateRandomCoordinates
   const autoPlaceShips = (shipTypes) => {
     shipTypes.forEach((ship) => {
       const { type, length } = ship;
       placeShip(type, generateRandomCoordinates(length));
     });
-    // // Place Patrol Boat
-    // placeShip('Patrol Boat', generateRandomCoordinates(2));
-    // // Submarine
-    // placeShip('Submarine', generateRandomCoordinates(3));
-    // // Destroyer
-    // placeShip('Destroyer', generateRandomCoordinates(3));
-    // // Battleship
-    // placeShip('Battleship', generateRandomCoordinates(4));
-    // // Carrier
-    // placeShip('Carrier', generateRandomCoordinates(5));
   };
 
   return {
