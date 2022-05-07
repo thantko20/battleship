@@ -87,12 +87,12 @@ const domHandler = (function () {
     });
   };
 
-  const popUpBtn = (btn) => {
-    btn.classList.remove('btn-hidden');
+  const popUpBtns = (...btns) => {
+    btns.forEach((btn) => btn.classList.remove('btn-hidden'));
   };
 
-  const hideBtn = (btn) => {
-    btn.classList.add('btn-hidden');
+  const hideBtns = (...btns) => {
+    btns.forEach((btn) => btn.classList.add('btn-hidden'));
   };
 
   const placeShip = (event) => {
@@ -116,7 +116,7 @@ const domHandler = (function () {
       renderPlayerShips();
       ship = Game.getShipToPlace();
 
-      if (Game.allShipsPlaced()) popUpBtn(startBtn);
+      if (Game.allShipsPlaced()) popUpBtns(startBtn);
     }
   };
 
@@ -132,6 +132,14 @@ const domHandler = (function () {
     effectedCells.forEach((effCell) => {
       effCell.removeAttribute('hover');
     });
+  };
+
+  const toggleBoardPointerEvents = (board, action) => {
+    if (action === 'add') {
+      board.classList.add('playing');
+    } else {
+      board.classList.remove('playing');
+    }
   };
 
   // Binding events to dynamically generated elements
@@ -152,19 +160,33 @@ const domHandler = (function () {
 
     // Event for placing the ships on the board randomly
     placeRandomBtn.addEventListener('click', () => {
+      gameStage.textContent = 'Randomized!';
       Game.placePlayerRandom();
       clearPlayerShips();
       renderPlayerShips();
-      if (Game.allShipsPlaced()) popUpBtn(startBtn);
+      if (Game.allShipsPlaced()) popUpBtns(startBtn);
     });
 
     // Reset the board
     resetBoardBtn.addEventListener('click', () => {
+      toggleBoardPointerEvents(playerBoardEl, 'remove');
+      clearPlaceHoverEffect();
       Game.resetPlayerBoard();
       ship = Game.getShipToPlace();
       clearPlayerShips();
       renderPlayerShips();
-      hideBtn(startBtn);
+      hideBtns(startBtn);
+    });
+
+    startBtn.addEventListener('click', () => {
+      toggleBoardPointerEvents(playerBoardEl, 'add');
+      clearPlaceHoverEffect();
+      // Pop up the computer board
+      const computerArena = document.querySelector('.computer-arena');
+      computerArena.classList.remove('hide-arena');
+      // hide the btns
+      hideBtns(resetBoardBtn, placeRandomBtn, startBtn, axisBtn);
+      // Change the game stage title
     });
   };
 
