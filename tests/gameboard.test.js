@@ -118,6 +118,15 @@ describe('Gameboard', () => {
     });
   });
 
+  describe('autoPlaceShips', () => {
+    it('auto places the ships', () => {
+      const board = Gameboard();
+      board.autoPlaceShips();
+      const shipCount = board.getShips().length;
+      expect(shipCount).toBe(5);
+    });
+  });
+
   describe('reset', () => {
     it('resets the board,i.e, making ships array length back to 0', () => {
       const board = Gameboard();
@@ -129,6 +138,44 @@ describe('Gameboard', () => {
       board.reset();
       const after = board.getShips().length;
       expect(after).toBe(0);
+    });
+  });
+
+  describe('allShipsSunk', () => {
+    it('returns true if all ships are sunk', () => {
+      const board = Gameboard();
+      board.placeShip('Patrol Boat', [
+        [0, 0],
+        [0, 1],
+      ]);
+      board.placeShip('Submarine', [
+        [4, 0],
+        [4, 1],
+        [4, 2],
+      ]);
+      board.getShipsCoordinates().forEach((coordinate) => {
+        board.receiveAttack(coordinate);
+      });
+
+      const result = board.allShipsSunk();
+      expect(result).toBe(true);
+    });
+
+    it('returns false if not all ships are sunk', () => {
+      const board = Gameboard();
+      board.placeShip('Patrol Boat', [
+        [0, 0],
+        [0, 1],
+      ]);
+      board.placeShip('Submarine', [
+        [4, 0],
+        [4, 1],
+        [4, 2],
+      ]);
+      board.receiveAttack([0, 0]);
+      board.receiveAttack([0, 1]);
+      const result = board.allShipsSunk();
+      expect(result).toBe(false);
     });
   });
 });
