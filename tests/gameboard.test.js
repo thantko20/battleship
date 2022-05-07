@@ -121,7 +121,13 @@ describe('Gameboard', () => {
   describe('autoPlaceShips', () => {
     it('auto places the ships', () => {
       const board = Gameboard();
-      board.autoPlaceShips();
+      board.autoPlaceShips([
+        { type: 'Patrol Boat', length: 2 },
+        { type: 'Submarine', length: 3 },
+        { type: 'Destroyer', length: 3 },
+        { type: 'Battleship', length: 4 },
+        { type: 'Carrier', length: 5 },
+      ]);
       const shipCount = board.getShips().length;
       expect(shipCount).toBe(5);
     });
@@ -130,7 +136,13 @@ describe('Gameboard', () => {
   describe('reset', () => {
     it('resets the board,i.e, making ships array length back to 0', () => {
       const board = Gameboard();
-      board.autoPlaceShips();
+      board.autoPlaceShips([
+        { type: 'Patrol Boat', length: 2 },
+        { type: 'Submarine', length: 3 },
+        { type: 'Destroyer', length: 3 },
+        { type: 'Battleship', length: 4 },
+        { type: 'Carrier', length: 5 },
+      ]);
       const before = board.getShips().length;
 
       expect(before).toBe(5);
