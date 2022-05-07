@@ -38,6 +38,17 @@ const domHandler = (function () {
     }
   };
 
+  const renderPlayerShips = () => {
+    const coordinates = Game.getPlayerShipsPositions();
+
+    coordinates.forEach((coordinate) => {
+      const cell = playerBoardEl.querySelector(
+        `.grid-cell[coordinate="${coordinate[0]},${coordinate[1]}"]`,
+      );
+      cell.setAttribute('empty', false);
+    });
+  };
+
   const generateTile = (coordinate) => {
     const temp = [];
 
@@ -75,21 +86,33 @@ const domHandler = (function () {
     });
   };
 
+  const placeShip = (event) => {
+    if (Game.allShipsPlaced()) return;
+    const cell = event.target;
+
+    if (
+      cell.classList.contains('grid-cell') &&
+      cell.getAttribute('empty') === 'true'
+    ) {
+      const coordinate = cell
+        .getAttribute('coordinate')
+        .split(',')
+        .map((ordinate) => parseInt(ordinate, 10));
+
+      const tile = generateTile(coordinate);
+
+      if (!Game.availablePositions(tile)) return;
+
+      Game.placePlayerShip(tile);
+      renderPlayerShips();
+      ship = Game.getShipToPlace();
+    }
+  };
+
   const clearPlayerShips = () => {
     const cells = playerBoardEl.querySelectorAll(".grid-cell[empty='false'");
     if (!cells) return;
     cells.forEach((cell) => cell.setAttribute('empty', true));
-  };
-
-  const renderPlayerShips = () => {
-    const coordinates = Game.getPlayerShipsPositions();
-
-    coordinates.forEach((coordinate) => {
-      const cell = playerBoardEl.querySelector(
-        `.grid-cell[coordinate="${coordinate[0]},${coordinate[1]}"]`,
-      );
-      cell.setAttribute('empty', false);
-    });
   };
 
   const clearPlaceHoverEffect = () => {
@@ -114,28 +137,7 @@ const domHandler = (function () {
     });
 
     // Place the ship on the board
-    playerBoardEl.addEventListener('click', (e) => {
-      if (Game.allShipsPlaced()) return;
-      const cell = e.target;
-
-      if (
-        cell.classList.contains('grid-cell') &&
-        cell.getAttribute('empty') === 'true'
-      ) {
-        const coordinate = cell
-          .getAttribute('coordinate')
-          .split(',')
-          .map((ordinate) => parseInt(ordinate, 10));
-
-        const tile = generateTile(coordinate);
-
-        if (!Game.availablePositions(tile)) return;
-
-        Game.placePlayerShip(tile);
-        renderPlayerShips();
-        ship = Game.getShipToPlace();
-      }
-    });
+    playerBoardEl.addEventListener('click', placeShip);
 
     // Event for placing the ships on the board randomly
     placeRandomBtn.addEventListener('click', () => {
