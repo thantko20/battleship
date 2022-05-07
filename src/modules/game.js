@@ -44,7 +44,7 @@ const Game = (function () {
 
   const placePlayerRandom = () => {
     resetPlayerBoard();
-    playerBoard.autoPlaceShips();
+    playerBoard.autoPlaceShips(shipTypes);
     shipIdToPlace = shipTypes.length;
   };
 
